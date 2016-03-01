@@ -53,11 +53,6 @@ bool SoftwareSerial::listen()
         //Start bit low
         attachInterrupt(_receivePin, handle_interrupt, FALLING);
     
-    uint32_t a;
-    uint32_t reg;
-     a = a | (1<<digitalPinToInterrupt(_receivePin));
-      reg= EIC->INTENSET.reg;
-      reg= reg & a;
     
     return true;
   }
