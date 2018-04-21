@@ -2,6 +2,8 @@
   SoftwareSerial.cpp - library for Arduino M0/M0 pro
   Copyright (c) 2016 Arduino Srl. All rights reserved.
   Written by Chiara Ruggeri (chiara@arduino.org)
+  Portions copyright (c) 2018 MCCI Corporation. All rights reserved.
+  Written by Terry Moore (tmm@mcci.com)
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
