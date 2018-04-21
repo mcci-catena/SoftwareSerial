@@ -18,18 +18,18 @@
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- 
+
   Enjoy!
-*/ 
- 
- 
+*/
+
+
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 #include <variant.h>
 #include <WInterrupts.h>
 
 SoftwareSerial *SoftwareSerial::active_object = 0;
-char SoftwareSerial::_receive_buffer[_SS_MAX_RX_BUFF]; 
+char SoftwareSerial::_receive_buffer[_SS_MAX_RX_BUFF];
 volatile uint8_t SoftwareSerial::_receive_buffer_tail = 0;
 volatile uint8_t SoftwareSerial::_receive_buffer_head = 0;
 
@@ -54,17 +54,17 @@ bool SoftwareSerial::listen()
     else
         //Start bit low
         attachInterrupt(_receivePin, handle_interrupt, FALLING);
-    
-    
+
+
     return true;
   }
  return false;
 }
-  
+
 bool SoftwareSerial::stopListening()
 {
    if (active_object == this)
-   {  
+   {
         EIC->INTENCLR.reg = EIC_INTENCLR_EXTINT( 1 << digitalPinToInterrupt( _receivePin )) ;
      active_object = NULL;
      return true;
@@ -75,34 +75,34 @@ bool SoftwareSerial::stopListening()
 
 void SoftwareSerial::recv()
 {
-    
+
   uint8_t d = 0;
-   
+
   // If RX line is high, then we don't see any start bit
   // so interrupt is probably not for us
   if (_inverse_logic ? rx_pin_read() : !rx_pin_read())
   {
 
        EIC->INTENCLR.reg = EIC_INTENCLR_EXTINT( 1 << digitalPinToInterrupt(_receivePin));
-   
+
     // Wait approximately 1/2 of a bit width to "center" the sample
        delayMicroseconds(_rx_delay_centering);
-   
+
     // Read each of the 8 bits
     for (uint8_t i=8; i > 0; --i)
     {
-        
+
      delayMicroseconds(_rx_delay_intrabit);
       d >>= 1;
       if (rx_pin_read()){
-        d |= 0x80;                  
+        d |= 0x80;
        }
-     
+
     }
     if (_inverse_logic){
       d = ~d;
     }
-    
+
     // if buffer full, set the overflow flag and return
     uint8_t next = (_receive_buffer_tail + 1) % _SS_MAX_RX_BUFF;
     if (next != _receive_buffer_head)
@@ -110,14 +110,14 @@ void SoftwareSerial::recv()
       // save new data in buffer: tail points to where byte goes
       _receive_buffer[_receive_buffer_tail] = d; // save new byte
       _receive_buffer_tail = next;
-    } 
-    else 
+    }
+    else
     {
       _buffer_overflow = true;
     }
 
     // skip the stop bit
-   delayMicroseconds(_rx_delay_stopbit); 
+   delayMicroseconds(_rx_delay_stopbit);
 
      EIC->INTENSET.reg = EIC_INTENSET_EXTINT( 1 << digitalPinToInterrupt(_receivePin));
   }
@@ -125,7 +125,7 @@ void SoftwareSerial::recv()
 
 
 uint32_t SoftwareSerial::rx_pin_read()
-{ 
+{
   return _receivePortRegister->reg & digitalPinToBitMask(_receivePin);
 }
 
@@ -140,14 +140,14 @@ inline void SoftwareSerial::handle_interrupt()
 
 
 // Constructor
-SoftwareSerial::SoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic /* = false */) : 
+SoftwareSerial::SoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic /* = false */) :
   _rx_delay_centering(0),
   _rx_delay_intrabit(0),
   _rx_delay_stopbit(0),
   _tx_delay(0),
   _buffer_overflow(false),
   _inverse_logic(inverse_logic)
-{   
+{
   _receivePin = receivePin;
   _transmitPin = transmitPin;
 }
@@ -169,7 +169,7 @@ void SoftwareSerial::setTX(uint8_t tx)
   _transmitBitMask = digitalPinToBitMask(tx);
   PortGroup * port = digitalPinToPort(tx);
   _transmitPortRegister = (volatile decltype(_transmitPortRegister)) portOutputRegister(port);
- 
+
 }
 
 void SoftwareSerial::setRX(uint8_t rx)
@@ -186,25 +186,25 @@ void SoftwareSerial::setRX(uint8_t rx)
 
 
 void SoftwareSerial::begin(unsigned long speed)
-{   
+{
     setTX(_transmitPin);
     setRX(_receivePin);
     // Precalculate the various delays
     //Calculate the distance between bit in micro seconds
   uint32_t bit_delay = (float(1)/speed)*1000000;
- 
+
   _tx_delay = bit_delay;
-  
+
   // Only setup rx when we have a valid PCINT for this pin
   if (digitalPinToInterrupt(_receivePin)!=NOT_AN_INTERRUPT) {
       //Wait 1/2 bit - 2 micro seconds (time for interrupt to be served)
        _rx_delay_centering = (bit_delay/2) - 2;
       //Wait 1 bit - 2 micro seconds (time in each loop iteration)
        _rx_delay_intrabit = bit_delay - 2;
-      //Wait 1 bit (the stop one) 
-       _rx_delay_stopbit = bit_delay; 
+      //Wait 1 bit (the stop one)
+       _rx_delay_stopbit = bit_delay;
 
-       
+
       delayMicroseconds(_tx_delay);
       }
       listen();
@@ -214,7 +214,7 @@ void SoftwareSerial::end()
 {
   stopListening();
 }
-  
+
 int SoftwareSerial::read()
 {
   if (!isListening()){
@@ -229,14 +229,14 @@ int SoftwareSerial::read()
   uint8_t d = _receive_buffer[_receive_buffer_head]; // grab next byte
   _receive_buffer_head = (_receive_buffer_head + 1) % _SS_MAX_RX_BUFF;
   return d;
-}  
+}
 
 
 int SoftwareSerial::available()
 {
   if (!isListening())
     return 0;
-  
+
   return (_receive_buffer_tail + _SS_MAX_RX_BUFF - _receive_buffer_head) % _SS_MAX_RX_BUFF;
 }
 
@@ -257,7 +257,7 @@ size_t SoftwareSerial::write(uint8_t b)
   uint32_t inv_mask = ~_transmitBitMask;
   bool inv = _inverse_logic;
   uint16_t delay = _tx_delay;
-  
+
   if (inv)
     b = ~b;
  // turn off interrupts for a clean txmit
@@ -280,7 +280,7 @@ size_t SoftwareSerial::write(uint8_t b)
     else
       reg->reg &= inv_mask; // send 0
 
-  delayMicroseconds(delay); 
+  delayMicroseconds(delay);
     b >>= 1;
   }
 
@@ -289,12 +289,12 @@ size_t SoftwareSerial::write(uint8_t b)
     reg->reg &= inv_mask;
   else
     reg->reg |= reg_mask;
-  
+
 
    EIC->INTENSET.reg = EIC_INTENSET_EXTINT( 1 << digitalPinToInterrupt( _receivePin ) ) ;
-  
-  delayMicroseconds(delay);  
-  
+
+  delayMicroseconds(delay);
+
   return 1;
 }
 
@@ -304,11 +304,11 @@ void SoftwareSerial::drainRead()
     return;
 
   EIC->INTENCLR.reg = EIC_INTENCLR_EXTINT( 1 << digitalPinToInterrupt( _receivePin ) ) ;
-  
+
   _receive_buffer_head = _receive_buffer_tail = 0;
 
    EIC->INTENSET.reg = EIC_INTENSET_EXTINT( 1 << digitalPinToInterrupt( _receivePin ) ) ;
-  
+
 }
 
 int SoftwareSerial::peek()

@@ -18,9 +18,9 @@
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- 
+
   Enjoy!
-*/ 
+*/
 
 #ifndef SoftwareSerial_h
 #define SoftwareSerial_h
@@ -59,7 +59,7 @@ private:
   uint16_t _inverse_logic:1;
 
   // static data
-  static char _receive_buffer[_SS_MAX_RX_BUFF]; 
+  static char _receive_buffer[_SS_MAX_RX_BUFF];
   static volatile uint8_t _receive_buffer_tail;
   static volatile uint8_t _receive_buffer_head;
   static SoftwareSerial *active_object;
@@ -92,7 +92,7 @@ public:
   virtual int available();
   virtual void flush() { /* nothing */ };
   operator bool() { return true; }
-  
+
   using Print::write;
 
   // drain receive queue all at once
@@ -112,4 +112,4 @@ public:
 #undef round
 
 #endif
- 
+
