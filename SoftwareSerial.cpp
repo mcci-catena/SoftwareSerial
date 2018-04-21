@@ -166,7 +166,7 @@ void SoftwareSerial::setTX(uint8_t tx)
   pinMode(tx, OUTPUT);
   _transmitBitMask = digitalPinToBitMask(tx);
   PortGroup * port = digitalPinToPort(tx);
-  _transmitPortRegister = portOutputRegister(port);
+  _transmitPortRegister = (volatile decltype(_transmitPortRegister)) portOutputRegister(port);
  
 }
 
@@ -178,12 +178,12 @@ void SoftwareSerial::setRX(uint8_t rx)
   _receivePin = rx;
   _receiveBitMask = digitalPinToBitMask(rx);
   PortGroup * port = digitalPinToPort(rx);
-  _receivePortRegister = portInputRegister(port);
+  _receivePortRegister = (volatile decltype(_receivePortRegister)) portInputRegister(port);
 
 }
 
 
-void SoftwareSerial::begin(long speed)
+void SoftwareSerial::begin(unsigned long speed)
 {   
     setTX(_transmitPin);
     setRX(_receivePin);
@@ -296,7 +296,7 @@ size_t SoftwareSerial::write(uint8_t b)
   return 1;
 }
 
-void SoftwareSerial::flush()
+void SoftwareSerial::drainRead()
 {
   if (!isListening())
     return;

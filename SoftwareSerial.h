@@ -75,7 +75,9 @@ public:
   // public methods
   SoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic = false);
   ~SoftwareSerial();
-  void begin(long speed);
+  void begin(long speed) { this->begin((unsigned long)speed); }
+  void begin(unsigned long speed);
+  void begin(unsigned long speed, uint16_t config) { this->begin(speed); }
   bool listen();
   void end();
   bool isListening() { return this == active_object; }
@@ -86,10 +88,13 @@ public:
   virtual size_t write(uint8_t byte);
   virtual int read();
   virtual int available();
-  virtual void flush();
+  virtual void flush() { /* nothing */ };
   operator bool() { return true; }
   
   using Print::write;
+
+  // drain receive queue all at once
+  virtual void drainRead(void);
 
   // public only for easy access by interrupt handlers
   static inline void handle_interrupt() __attribute__((__always_inline__));
