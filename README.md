@@ -16,6 +16,8 @@ This is the version as imported from Arduino.
 
 This library contains several "unbreaking changes" -- it breaks old code, but makes the library compatible with new code.
 
+The changes:
+
 - `SoftwareSerial::flush()` no longer empties the RX queue. Since there is no TX queue with this library, this API does nothing.
 
 - `SoftwareSerial::begin(unsigned long speed)` matches modern APIs for `UART` -- the old `SoftwareSerial::begin(long speed)` maps to the new API.
@@ -23,3 +25,5 @@ This library contains several "unbreaking changes" -- it breaks old code, but ma
 - Added `SoftwareSerial::begin(unsigned long speed, uint16_t config)`. This is currently only for compatibility with `UART`; the config is not yet used.
 
 - Added `SoftwareSerial::drainRead()` to do what flush() used to do, in case you are not happy with the recommended `while (mySerial.read() >= 0) /* spin */;` work-around.
+
+- Added fix for [issue 234](https://github.com/arduino/ArduinoCore-samd/issues/234).
