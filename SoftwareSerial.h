@@ -77,7 +77,6 @@ public:
   // public methods
   SoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic = false);
   ~SoftwareSerial();
-  void begin(long speed) { this->begin((unsigned long)speed); }
   void begin(unsigned long speed);
   void begin(unsigned long speed, uint16_t config) { this->begin(speed); }
   bool listen();
