@@ -1,8 +1,8 @@
 /*
-  SoftwareSerial.cpp - library for Arduino M0/M0 pro
+  MCCI_SoftSerial.cpp - library for Arduino M0/M0 pro
   Copyright (c) 2016 Arduino Srl. All rights reserved.
   Written by Chiara Ruggeri (chiara@arduino.org)
-  Portions copyright (c) 2018 MCCI Corporation. All rights reserved.
+  Portions copyright (c) 2018, 2021, 2023 MCCI Corporation. All rights reserved.
   Written by Terry Moore (tmm@mcci.com)
 
   This library is free software; you can redistribute it and/or
@@ -22,8 +22,8 @@
   Enjoy!
 */
 
-#ifndef SoftwareSerial_h
-#define SoftwareSerial_h
+#ifndef _MCCI_SoftSerial_h_
+#define _MCCI_SoftSerial_h_
 
 #include <inttypes.h>
 #include <Stream.h>
@@ -110,5 +110,5 @@ public:
 #undef abs
 #undef round
 
-#endif
+#endif /* _MCCI_SoftSerial_h_ */
 
