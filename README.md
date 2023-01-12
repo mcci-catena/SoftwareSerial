@@ -1,20 +1,16 @@
-# MCCI_SoftSerial library for Arduino
+# SoftwareSerial library for Arduino
 
 This directory contains the SoftwareSerial library split out from https://github.com/Arduino-org/Arduino. All relevant history is retained.
 
 We split it out because it needs some TLC to be compatible with our Modbus library (in particular, the APIs didn't match the modern serial port APIs, and it will no longer compile with modern compilers -- see [issue 234](https://github.com/arduino/ArduinoCore-samd/issues/234)).
 
-[![GitHub release](https://img.shields.io/github/release/mcci-catena/MCCI_SoftSerial/all.svg)](https://github.com/mcci-catena/MCCI_SoftSerial/releases/latest) ![GitHub commits](https://img.shields.io/github/commits-since/mcci-catena/MCCI_SoftSerial/latest.svg)
+[![GitHub release](https://img.shields.io/github/release/mcci-catena/SoftwareSerial/all.svg)](https://github.com/mcci-catena/SoftwareSerial/releases/latest) ![GitHub commits](https://img.shields.io/github/commits-since/mcci-catena/SoftwareSerial/latest.svg)
 
 ## Change Summary
 
-### v3.0.0
+### v1.0.0
 
-The changes are:
-
-- Fixed issue - ```call of overloaded 'begin(int)' is ambiguous```.
-
-- Modify file names to get library added in Library Manager.
+This is the version as imported from Arduino.
 
 ### v2.0.0
 
@@ -32,6 +28,10 @@ The changes:
 
 - Added fix for [issue 234](https://github.com/arduino/ArduinoCore-samd/issues/234).
 
-### v1.0.0
+### v3.0.0
 
-This is the version as imported from Arduino.
+The changes are:
+
+- Fixed issue - ```call of overloaded 'begin(int)' is ambiguous```.
+
+- Modify file names to get library added in Library Manager.
