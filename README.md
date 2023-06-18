@@ -27,3 +27,11 @@ The changes:
 - Added `SoftwareSerial::drainRead()` to do what flush() used to do, in case you are not happy with the recommended `while (mySerial.read() >= 0) /* spin */;` work-around.
 
 - Added fix for [issue 234](https://github.com/arduino/ArduinoCore-samd/issues/234).
+
+### v3.0.0
+
+The changes are:
+
+- Fixed issue - ```call of overloaded 'begin(int)' is ambiguous```.
+
+- Modify file names to get library added in Library Manager.
